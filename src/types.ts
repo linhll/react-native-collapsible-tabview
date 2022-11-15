@@ -48,6 +48,7 @@ export type CollapsibleContext = {
   buildGetRef: (routeKey: string) => GetRef;
   headerHeight: number;
   tabBarHeight: number;
+  appBarHeight: number;
   containerHeight: number;
   onMomentumScrollBegin: (
     event: NativeSyntheticEvent<NativeScrollEvent>

@@ -1,3 +1,10 @@
+# 2.1.0 (2022-11-15)
+
+
+### Features
+
+* add props appBar & renderBackground ([a91017f](https://github.com/PedroBern/react-native-collapsible-tab-view/commit/a91017f47e18bc99fff1b562e6c27e2f4cbbe4ba))
+
 ## [2.2.1](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.2.0...v2.2.1) (2022-11-15)
 
 

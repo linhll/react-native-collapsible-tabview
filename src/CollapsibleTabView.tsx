@@ -76,7 +76,7 @@ export type Props<
     /**
      * Custom header background element.
      */
-    renderBackground?: (value: Animated.Value) => React.ReactNode | null;
+    headerBackground?: React.ReactNode | null;
     /**
      * Callback fired when the `headerHeight` state value inside
      * `CollapsibleTabView` will be updated in the `onLayout` event
@@ -125,7 +125,7 @@ const CollapsibleTabView = <
   headerContainerStyle,
   preventTabPressOnGliding = true,
   disableSnap = false,
-  renderBackground,
+  headerBackground,
   renderTabBar: customRenderTabBar,
   onHeaderHeightChange,
   snapThreshold = 0.5,
@@ -370,7 +370,18 @@ const CollapsibleTabView = <
   ): React.ReactNode => {
     return (
       <View style={{ zIndex: 1000 }}>
-        {renderBackground?.(scrollY.current)}
+        {!!headerBackground && (
+          <Animated.View
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: appBarHeight + tabBarHeight + headerHeight,
+              transform: [{ translateY }],
+            }}
+          >
+            {headerBackground}
+          </Animated.View>
+        )}
 
         {!!appBar && (
           <View
@@ -452,6 +463,7 @@ const CollapsibleTabView = <
           buildGetRef,
           headerHeight,
           tabBarHeight,
+          appBarHeight,
           onMomentumScrollBegin,
           onScrollBeginDrag,
           onScrollEndDrag,

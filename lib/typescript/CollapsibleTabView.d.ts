@@ -50,7 +50,7 @@ export declare type Props<T extends Route, P extends object = PTabBarProps<T>> =
     /**
      * Custom header background element.
      */
-    renderBackground?: (value: Animated.Value) => React.ReactNode | null;
+    headerBackground?: React.ReactNode | null;
     /**
      * Callback fired when the `headerHeight` state value inside
      * `CollapsibleTabView` will be updated in the `onLayout` event
@@ -84,5 +84,5 @@ export declare type Props<T extends Route, P extends object = PTabBarProps<T>> =
  * `CollapsibleTabView` wraps the `TabView` and take care of animations /
  * scroll value computations. It should be used with `useCollapsibleScene`.
  */
-declare const CollapsibleTabView: <T extends Route, P extends object = Partial<TabBarProps<T>>>({ animatedValue, navigationState: { index, routes }, renderHeader, headerHeight: initialHeaderHeight, tabBarHeight, appBar, tabBarProps, headerContainerStyle, preventTabPressOnGliding, disableSnap, renderBackground, renderTabBar: customRenderTabBar, onHeaderHeightChange, snapThreshold, snapTimeout, routeKeyProp, ...tabViewProps }: Props<T, P>) => React.ReactElement;
+declare const CollapsibleTabView: <T extends Route, P extends object = Partial<TabBarProps<T>>>({ animatedValue, navigationState: { index, routes }, renderHeader, headerHeight: initialHeaderHeight, tabBarHeight, appBar, tabBarProps, headerContainerStyle, preventTabPressOnGliding, disableSnap, headerBackground, renderTabBar: customRenderTabBar, onHeaderHeightChange, snapThreshold, snapTimeout, routeKeyProp, ...tabViewProps }: Props<T, P>) => React.ReactElement;
 export default CollapsibleTabView;
