@@ -1,3 +1,28 @@
+## [2.2.1](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.2.0...v2.2.1) (2022-11-15)
+
+
+### Bug Fixes
+
+* container position ([b93df2b](https://github.com/PedroBern/react-native-collapsible-tab-view/commit/b93df2b1d24046fce39f3ebb70d23b617b8e8842))
+
+# [2.2.0](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.1.1...v2.2.0) (2022-11-15)
+
+
+### Features
+
+* add appBar ([28ee938](https://github.com/PedroBern/react-native-collapsible-tab-view/commit/28ee938a44767da22862f4eeadfcb33b3cd11c71))
+
+## [2.1.1](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.1.0...v2.1.1) (2022-11-15)
+
+# [2.1.0](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.0.3...v2.1.0) (2022-11-15)
+
+
+### Features
+
+* add props appBar ([c0864f8](https://github.com/PedroBern/react-native-collapsible-tab-view/commit/c0864f85fa6918bc0a1184b71054ed943dd895b1))
+
+## 2.0.3 (2022-11-15)
+
 ## [2.0.2](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.0.1...v2.0.2) (2021-01-14)
 
 

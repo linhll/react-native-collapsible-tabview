@@ -51,6 +51,7 @@ export type Props<
      * Props passed to the tab bar component.
      */
     tabBarProps?: P;
+    appBar?: React.ReactNode | null;
     /**
      * Header rendered on top of the tab bar. Default is `() => null`
      */
@@ -75,7 +76,7 @@ export type Props<
     /**
      * Custom header background element.
      */
-    headerBackgroundElement?: React.ReactNode | null;
+    renderBackground?: (value: Animated.Value) => React.ReactNode | null;
     /**
      * Callback fired when the `headerHeight` state value inside
      * `CollapsibleTabView` will be updated in the `onLayout` event
@@ -119,11 +120,12 @@ const CollapsibleTabView = <
   renderHeader = () => null,
   headerHeight: initialHeaderHeight = 0,
   tabBarHeight = 48,
+  appBar,
   tabBarProps,
   headerContainerStyle,
   preventTabPressOnGliding = true,
   disableSnap = false,
-  headerBackgroundElement,
+  renderBackground,
   renderTabBar: customRenderTabBar,
   onHeaderHeightChange,
   snapThreshold = 0.5,
@@ -134,6 +136,8 @@ const CollapsibleTabView = <
   const [headerHeight, setHeaderHeight] = React.useState(
     Math.max(initialHeaderHeight, 0)
   );
+  const [appBarHeight, setAppBarHeight] = React.useState(0);
+
   const scrollY = React.useRef(animatedValue);
   const listRefArr = React.useRef<{ key: T['key']; value?: ScrollRef }[]>([]);
   const listOffset = React.useRef<{ [key: string]: number }>({});
@@ -163,7 +167,7 @@ const CollapsibleTabView = <
     scrollY.current.interpolate({
       inputRange: [0, Math.max(headerHeight, 0)],
       outputRange: [0, -headerHeight],
-      extrapolateRight: 'clamp',
+      extrapolate: 'clamp',
     })
   );
 
@@ -365,39 +369,53 @@ const CollapsibleTabView = <
     }
   ): React.ReactNode => {
     return (
-      <Animated.View
-        pointerEvents="box-none"
-        style={[
-          styles.headerContainer,
-          { transform: [{ translateY }] },
-          headerContainerStyle,
-        ]}
-        onLayout={getHeaderHeight}
-      >
-        {headerBackgroundElement}
-        {renderHeader()}
-        {customRenderTabBar ? (
-          // @ts-ignore
-          customRenderTabBar({
-            ...props,
-            ...tabBarProps,
-            isGliding,
-            preventTabPressOnGliding,
-          })
-        ) : (
-          <TabBar
-            {...props}
-            {...tabBarProps}
-            onTabPress={(event) => {
-              if (isGliding.current && preventTabPressOnGliding) {
-                event.preventDefault();
-              }
-              // @ts-ignore
-              tabBarProps?.onTabPress && tabBarProps.onTabPress(event);
-            }}
-          />
+      <View style={{ zIndex: 1000 }}>
+        {renderBackground?.(scrollY.current)}
+
+        {!!appBar && (
+          <View
+            onLayout={(e) => setAppBarHeight(e.nativeEvent.layout.height)}
+            style={{ zIndex: 1000 }}
+          >
+            {appBar}
+          </View>
         )}
-      </Animated.View>
+        <Animated.View
+          pointerEvents="box-none"
+          style={[
+            styles.headerContainer,
+            {
+              top: appBarHeight,
+              transform: [{ translateY }],
+            },
+            headerContainerStyle,
+          ]}
+          onLayout={getHeaderHeight}
+        >
+          {renderHeader()}
+          {customRenderTabBar ? (
+            // @ts-ignore
+            customRenderTabBar({
+              ...props,
+              ...tabBarProps,
+              isGliding,
+              preventTabPressOnGliding,
+            })
+          ) : (
+            <TabBar
+              {...props}
+              {...tabBarProps}
+              onTabPress={(event) => {
+                if (isGliding.current && preventTabPressOnGliding) {
+                  event.preventDefault();
+                }
+                // @ts-ignore
+                tabBarProps?.onTabPress && tabBarProps.onTabPress(event);
+              }}
+            />
+          )}
+        </Animated.View>
+      </View>
     );
   };
 
