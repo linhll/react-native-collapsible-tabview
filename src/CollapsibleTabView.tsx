@@ -143,6 +143,7 @@ const CollapsibleTabView = <
   const listRefArr = React.useRef<{ key: T['key']; value?: ScrollRef }[]>([]);
   const listOffset = React.useRef<{ [key: string]: number }>({});
   const isGliding = React.useRef(false);
+  const prevOffset = React.useRef(0);
   /** Used to keep track if the user is actively scrolling */
   const isUserInteracting = React.useRef(false);
   const lastInteractionTime = React.useRef(0);
@@ -177,6 +178,7 @@ const CollapsibleTabView = <
     currY.addListener(({ value }) => {
       const curRoute = routes[index][routeKeyProp as keyof Route] as string;
       listOffset.current[curRoute] = value;
+      prevOffset.current = value;
       lastInteractionTime.current = Date.now();
     });
     return () => {
@@ -315,6 +317,23 @@ const CollapsibleTabView = <
     syncScrollOffsets();
   };
 
+  const onLayout = () => {
+    const curRouteKey = routes[index][routeKeyProp];
+    const currentRef = listRefArr.current.find((r) => r.key === curRouteKey);
+    if (currentRef) {
+      const offset = disableSnap
+        ? Math.min(prevOffset.current, collapsedHeight)
+        : prevOffset.current >= collapsedHeight * snapThreshold
+        ? collapsedHeight
+        : 0;
+      scrollScene({
+        ref: currentRef.value,
+        offset,
+        animated: false,
+      });
+    }
+  };
+
   /**
    * Function to be passed as ref for the scrollable animated
    * component inside the tab scene.
@@ -440,6 +459,7 @@ const CollapsibleTabView = <
           onScrollBeginDrag,
           onScrollEndDrag,
           onMomentumScrollEnd,
+          onLayout,
           containerHeight: containerHeight || 0,
         }}
       >

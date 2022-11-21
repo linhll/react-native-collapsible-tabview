@@ -1,4 +1,4 @@
-import { Animated, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { Animated, NativeSyntheticEvent, NativeScrollEvent, LayoutChangeEvent } from 'react-native';
 export declare type ScrollableView = {
     scrollTo: (params: {
         x?: number;
@@ -38,6 +38,7 @@ export declare type CollapsibleContext = {
     onScrollBeginDrag: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
     onScrollEndDrag: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
     onMomentumScrollEnd: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+    onLayout: (event: LayoutChangeEvent) => void;
 };
 export declare type CollapsibleScenePropsAndRef = {
     /**
