@@ -1,3 +1,10 @@
+## [v2.1.1](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.1.0...vv2.1.1) (2022-11-21)
+
+
+### Features
+
+* update layout ([0a006d9](https://github.com/PedroBern/react-native-collapsible-tab-view/commit/0a006d92d1f3496a9c8c2bc5c849c9419050e5e1))
+
 # 2.1.0 (2022-11-15)
 
 
