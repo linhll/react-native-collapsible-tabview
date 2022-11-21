@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.1.1...v2.1.2) (2022-11-21)
+
+
+### Bug Fixes
+
+* lazy tab scene ([25c718f](https://github.com/PedroBern/react-native-collapsible-tab-view/commit/25c718fec073c5316202e2cfe8a84f4ccb530f60))
+
 ## [2.1.1](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/vv2.1.1...v2.1.1) (2022-11-21)
 
 
