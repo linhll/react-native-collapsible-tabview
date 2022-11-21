@@ -14,9 +14,13 @@ export declare type Props<T extends Route, P extends object = PTabBarProps<T>> =
      */
     animatedValue?: Animated.Value;
     /**
-     * Header height, default is 0.
+     * Container height
      */
-    headerHeight?: number;
+    containerHeight?: number;
+    /**
+     * Collapsed header height, default is 0.
+     */
+    collapsedHeight: number;
     /**
      * Tab bar height, default is 48.
      */
@@ -25,7 +29,14 @@ export declare type Props<T extends Route, P extends object = PTabBarProps<T>> =
      * Props passed to the tab bar component.
      */
     tabBarProps?: P;
+    /**
+     * App bar component
+     */
     appBar?: React.ReactNode | null;
+    /**
+     * App bar height
+     */
+    appBarHeight?: number;
     /**
      * Header rendered on top of the tab bar. Default is `() => null`
      */
@@ -84,5 +95,5 @@ export declare type Props<T extends Route, P extends object = PTabBarProps<T>> =
  * `CollapsibleTabView` wraps the `TabView` and take care of animations /
  * scroll value computations. It should be used with `useCollapsibleScene`.
  */
-declare const CollapsibleTabView: <T extends Route, P extends object = Partial<TabBarProps<T>>>({ animatedValue, navigationState: { index, routes }, renderHeader, headerHeight: initialHeaderHeight, tabBarHeight, appBar, tabBarProps, headerContainerStyle, preventTabPressOnGliding, disableSnap, headerBackground, renderTabBar: customRenderTabBar, onHeaderHeightChange, snapThreshold, snapTimeout, routeKeyProp, ...tabViewProps }: Props<T, P>) => React.ReactElement;
+declare const CollapsibleTabView: <T extends Route, P extends object = Partial<TabBarProps<T>>>({ animatedValue, navigationState: { index, routes }, renderHeader, containerHeight, collapsedHeight, tabBarHeight, appBarHeight, appBar, tabBarProps, headerContainerStyle, preventTabPressOnGliding, disableSnap, headerBackground, renderTabBar: customRenderTabBar, snapThreshold, snapTimeout, routeKeyProp, ...tabViewProps }: Props<T, P>) => React.ReactElement;
 export default CollapsibleTabView;

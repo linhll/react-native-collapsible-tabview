@@ -30,7 +30,7 @@ export declare type CollapsibleContext = {
      * ref of the scrollable component for a specific route.
      */
     buildGetRef: (routeKey: string) => GetRef;
-    headerHeight: number;
+    collapsedHeight: number;
     tabBarHeight: number;
     appBarHeight: number;
     containerHeight: number;

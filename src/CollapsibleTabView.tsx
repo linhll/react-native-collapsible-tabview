@@ -1,11 +1,5 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Animated,
-  ViewStyle,
-  LayoutChangeEvent,
-  View,
-} from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, Animated, ViewStyle, View } from 'react-native';
 import {
   TabView,
   TabBar,
@@ -40,9 +34,13 @@ export type Props<
      */
     animatedValue?: Animated.Value;
     /**
-     * Header height, default is 0.
+     * Container height
      */
-    headerHeight?: number;
+    containerHeight?: number;
+    /**
+     * Collapsed header height, default is 0.
+     */
+    collapsedHeight: number;
     /**
      * Tab bar height, default is 48.
      */
@@ -51,7 +49,14 @@ export type Props<
      * Props passed to the tab bar component.
      */
     tabBarProps?: P;
+    /**
+     * App bar component
+     */
     appBar?: React.ReactNode | null;
+    /**
+     * App bar height
+     */
+    appBarHeight?: number;
     /**
      * Header rendered on top of the tab bar. Default is `() => null`
      */
@@ -118,8 +123,10 @@ const CollapsibleTabView = <
   animatedValue = new Animated.Value(0),
   navigationState: { index, routes },
   renderHeader = () => null,
-  headerHeight: initialHeaderHeight = 0,
+  containerHeight = 48,
+  collapsedHeight = 0,
   tabBarHeight = 48,
+  appBarHeight = 0,
   appBar,
   tabBarProps,
   headerContainerStyle,
@@ -127,17 +134,11 @@ const CollapsibleTabView = <
   disableSnap = false,
   headerBackground,
   renderTabBar: customRenderTabBar,
-  onHeaderHeightChange,
   snapThreshold = 0.5,
   snapTimeout = 250,
   routeKeyProp = 'key',
   ...tabViewProps
 }: React.PropsWithoutRef<Props<T, P>>): React.ReactElement => {
-  const [headerHeight, setHeaderHeight] = React.useState(
-    Math.max(initialHeaderHeight, 0)
-  );
-  const [appBarHeight, setAppBarHeight] = React.useState(0);
-
   const scrollY = React.useRef(animatedValue);
   const listRefArr = React.useRef<{ key: T['key']; value?: ScrollRef }[]>([]);
   const listOffset = React.useRef<{ [key: string]: number }>({});
@@ -163,13 +164,13 @@ const CollapsibleTabView = <
     { trailing: true, leading: false }
   );
 
-  const [translateY, setTranslateY] = React.useState(
+  const translateY = useRef(
     scrollY.current.interpolate({
-      inputRange: [0, Math.max(headerHeight, 0)],
-      outputRange: [0, -headerHeight],
-      extrapolate: 'clamp',
+      inputRange: [0, Math.max(collapsedHeight, tabBarHeight)], // Always allow for a minimum of `tabBarHeight`
+      outputRange: [0, -collapsedHeight],
+      extrapolateRight: 'clamp',
     })
-  );
+  ).current;
 
   React.useLayoutEffect(() => {
     const currY = scrollY.current;
@@ -192,7 +193,7 @@ const CollapsibleTabView = <
 
     const newOffset = calculateNewOffset(
       offset,
-      headerHeight,
+      collapsedHeight,
       disableSnap,
       snapThreshold
     );
@@ -209,15 +210,22 @@ const CollapsibleTabView = <
           animated: false,
         });
         listOffset.current[item.key] = offset;
-      } else if (itemOffset < headerHeight || !itemOffset) {
+      } else if (itemOffset < collapsedHeight || !itemOffset) {
         scrollScene({
           ref: item.value,
-          offset: Math.min(offset, headerHeight),
+          offset: Math.min(offset, collapsedHeight),
           animated: false,
         });
       }
     });
-  }, [disableSnap, headerHeight, index, routeKeyProp, routes, snapThreshold]);
+  }, [
+    disableSnap,
+    collapsedHeight,
+    index,
+    routeKeyProp,
+    routes,
+    snapThreshold,
+  ]);
 
   /**
    * Snapping
@@ -232,7 +240,7 @@ const CollapsibleTabView = <
 
     const newOffset = calculateNewOffset(
       offset,
-      headerHeight,
+      collapsedHeight,
       disableSnap,
       snapThreshold
     );
@@ -250,7 +258,7 @@ const CollapsibleTabView = <
   }, [
     canSnap,
     disableSnap,
-    headerHeight,
+    collapsedHeight,
     index,
     routeKeyProp,
     routes,
@@ -264,7 +272,7 @@ const CollapsibleTabView = <
 
     const newOffset = calculateNewOffset(
       offset,
-      headerHeight,
+      collapsedHeight,
       disableSnap,
       snapThreshold
     );
@@ -277,7 +285,7 @@ const CollapsibleTabView = <
   }, [
     activateSnapDebounced,
     disableSnap,
-    headerHeight,
+    collapsedHeight,
     index,
     routeKeyProp,
     routes,
@@ -331,28 +339,6 @@ const CollapsibleTabView = <
   );
 
   /**
-   * Get header height on layout mount/change,
-   * if different from the current `headerHeight`,
-   * update both the `headerHeight` and the
-   * `translateY`.
-   */
-  const getHeaderHeight = React.useCallback(
-    (event: LayoutChangeEvent) => {
-      const value = event.nativeEvent.layout.height - tabBarHeight;
-      onHeaderHeightChange?.();
-      setHeaderHeight(Math.max(value, 0));
-      setTranslateY(
-        scrollY.current.interpolate({
-          inputRange: [0, Math.max(value, tabBarHeight)], // Always allow for a minimum of `tabBarHeight`
-          outputRange: [0, -value],
-          extrapolateRight: 'clamp',
-        })
-      );
-    },
-    [onHeaderHeightChange, scrollY, tabBarHeight]
-  );
-
-  /**
    *
    * Wraps the tab bar with `Animated.View` to
    * control the translateY property.
@@ -375,7 +361,7 @@ const CollapsibleTabView = <
             style={{
               position: 'absolute',
               width: '100%',
-              height: appBarHeight + tabBarHeight + headerHeight,
+              height: appBarHeight + tabBarHeight + collapsedHeight,
               transform: [{ translateY }],
             }}
           >
@@ -384,12 +370,7 @@ const CollapsibleTabView = <
         )}
 
         {!!appBar && (
-          <View
-            onLayout={(e) => setAppBarHeight(e.nativeEvent.layout.height)}
-            style={{ zIndex: 1000 }}
-          >
-            {appBar}
-          </View>
+          <View style={{ zIndex: 1000, height: appBarHeight }}>{appBar}</View>
         )}
         <Animated.View
           pointerEvents="box-none"
@@ -397,11 +378,11 @@ const CollapsibleTabView = <
             styles.headerContainer,
             {
               top: appBarHeight,
+              height: collapsedHeight + tabBarHeight,
               transform: [{ translateY }],
             },
             headerContainerStyle,
           ]}
-          onLayout={getHeaderHeight}
         >
           {renderHeader()}
           {customRenderTabBar ? (
@@ -430,14 +411,6 @@ const CollapsibleTabView = <
     );
   };
 
-  const [containerHeight, setContainerHeight] = React.useState<
-    number | undefined
-  >(undefined);
-
-  const onLayout = React.useCallback((e: LayoutChangeEvent) => {
-    setContainerHeight(e.nativeEvent.layout.height);
-  }, []);
-
   const onTouchStart = React.useCallback(() => {
     lastInteractionTime.current = Date.now();
     isUserInteracting.current = true;
@@ -451,7 +424,6 @@ const CollapsibleTabView = <
   return (
     <View
       style={styles.container}
-      onLayout={onLayout}
       onTouchStart={onTouchStart}
       onTouchCancel={onTouchEnd}
       onTouchEnd={onTouchEnd}
@@ -461,7 +433,7 @@ const CollapsibleTabView = <
           activeRouteKey: routes[index][routeKeyProp as keyof Route] as string,
           scrollY: scrollY.current,
           buildGetRef,
-          headerHeight,
+          collapsedHeight,
           tabBarHeight,
           appBarHeight,
           onMomentumScrollBegin,

@@ -3,5 +3,3 @@ export type { Props as CollapsibleTabViewProps, RenderTabBarProps, } from './Col
 export { default as useCollapsibleScene } from './useCollapsibleScene';
 export type { CollapsibleScenePropsAndRef } from './types';
 export { createContext } from './CollapsibleTabViewContext';
-export { default as MaterialTopTabsCollapsibleTabView } from './MaterialTopTabsCollapsibleTabView';
-export { default as createMaterialCollapsibleTopTabNavigator } from './createMaterialCollapsibleTopTabNavigator';

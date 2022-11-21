@@ -34,7 +34,7 @@ const useCollapsibleScene = <T extends Route>(
     activeRouteKey,
     scrollY,
     buildGetRef,
-    headerHeight,
+    collapsedHeight,
     tabBarHeight,
     containerHeight,
     appBarHeight,
@@ -54,10 +54,10 @@ const useCollapsibleScene = <T extends Route>(
     onScroll,
     ref: buildGetRef(routeKey),
     contentContainerStyle: {
-      paddingTop: headerHeight + tabBarHeight,
-      minHeight: containerHeight + headerHeight - appBarHeight,
+      paddingTop: collapsedHeight + tabBarHeight,
+      minHeight: containerHeight + collapsedHeight - appBarHeight,
     },
-    progressViewOffset: headerHeight + tabBarHeight,
+    progressViewOffset: collapsedHeight + tabBarHeight,
     tabBarHeight,
     ...rest,
   };
