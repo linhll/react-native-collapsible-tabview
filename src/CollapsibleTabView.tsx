@@ -169,7 +169,7 @@ const CollapsibleTabView = <
     scrollY.current.interpolate({
       inputRange: [0, Math.max(collapsedHeight, tabBarHeight)], // Always allow for a minimum of `tabBarHeight`
       outputRange: [0, -collapsedHeight],
-      extrapolateRight: 'clamp',
+      extrapolate: 'clamp',
     })
   ).current;
 
