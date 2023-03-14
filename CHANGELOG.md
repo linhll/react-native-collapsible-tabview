@@ -1,3 +1,5 @@
+## [2.1.3](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.1.2...v2.1.3) (2023-03-14)
+
 ## [2.1.2](https://github.com/PedroBern/react-native-collapsible-tab-view/compare/v2.1.1...v2.1.2) (2022-11-21)
 
 
